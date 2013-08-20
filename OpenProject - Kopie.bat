@@ -1,0 +1,1 @@
+start proj.win32\2DGame.sln
