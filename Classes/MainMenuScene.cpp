@@ -1,15 +1,14 @@
-#include "HelloWorldScene.h"
 #include "MainMenuScene.h"
 
 USING_NS_CC;
 
-Scene* HelloWorldScene::scene()
+Scene* MainMenuScene::scene()
 {
     // 'scene' is an autorelease object
     Scene *scene = Scene::create();
     
     // 'layer' is an autorelease object
-    HelloWorldScene *layer = HelloWorldScene::create();
+    MainMenuScene *layer = MainMenuScene::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -19,7 +18,7 @@ Scene* HelloWorldScene::scene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorldScene::init()
+bool MainMenuScene::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -39,7 +38,7 @@ bool HelloWorldScene::init()
     MenuItemImage *closeItem = MenuItemImage::create(
                                         "CloseNormal.png",
                                         "CloseSelected.png",
-                                        CC_CALLBACK_1(HelloWorldScene::menuCloseCallback, this));
+                                        CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this));
     
 	closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
@@ -55,7 +54,7 @@ bool HelloWorldScene::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    LabelTTF* label = LabelTTF::create("Hello World", "Arial", 24);
+    LabelTTF* label = LabelTTF::create("Hello World Menu", "Arial", 24);
     
     // position the label on the center of the screen
     label->setPosition(Point(origin.x + visibleSize.width/2,
@@ -72,16 +71,21 @@ bool HelloWorldScene::init()
 
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
-    
+
+	//Logo Einfügen
+	logo = Sprite::create("Logo.PNG");
+
+	logo->setPosition(Point(visibleSize.width/2,
+							visibleSize.height - logo->getContentSize().height/2));
+
+	this->addChild(logo, 2);
+
     return true;
 }
 
-
-void HelloWorldScene::menuCloseCallback(Object* pSender)
+void MainMenuScene::menuCloseCallback(Object* pSender)
 {
-    //Director::getInstance()->end();
-
-	Director::getInstance()->replaceScene(MainMenuScene::scene());
+    Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);

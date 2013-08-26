@@ -1,15 +1,14 @@
-#include "HelloWorldScene.h"
-#include "MainMenuScene.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
-Scene* HelloWorldScene::scene()
+Scene* GameScene::scene()
 {
     // 'scene' is an autorelease object
     Scene *scene = Scene::create();
     
     // 'layer' is an autorelease object
-    HelloWorldScene *layer = HelloWorldScene::create();
+    GameScene *layer = GameScene::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -19,7 +18,7 @@ Scene* HelloWorldScene::scene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorldScene::init()
+bool GameScene::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -31,6 +30,15 @@ bool HelloWorldScene::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Point origin = Director::getInstance()->getVisibleOrigin();
 
+
+	paralax1 = new Layer();
+	paralax2 = new Layer();
+
+	level = new Layer();
+
+
+	
+
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
@@ -39,7 +47,7 @@ bool HelloWorldScene::init()
     MenuItemImage *closeItem = MenuItemImage::create(
                                         "CloseNormal.png",
                                         "CloseSelected.png",
-                                        CC_CALLBACK_1(HelloWorldScene::menuCloseCallback, this));
+                                        CC_CALLBACK_1(GameScene::menuCloseCallback, this));
     
 	closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
@@ -77,11 +85,19 @@ bool HelloWorldScene::init()
 }
 
 
-void HelloWorldScene::menuCloseCallback(Object* pSender)
-{
-    //Director::getInstance()->end();
 
-	Director::getInstance()->replaceScene(MainMenuScene::scene());
+GameScene::GameScene(){
+
+}
+
+
+GameScene::~GameScene(){
+
+}
+
+void GameScene::menuCloseCallback(Object* pSender)
+{
+    Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);

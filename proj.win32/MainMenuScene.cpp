@@ -1,15 +1,14 @@
-#include "HelloWorldScene.h"
 #include "MainMenuScene.h"
 
 USING_NS_CC;
 
-Scene* HelloWorldScene::scene()
+Scene* MainMenuScene::scene()
 {
     // 'scene' is an autorelease object
     Scene *scene = Scene::create();
     
     // 'layer' is an autorelease object
-    HelloWorldScene *layer = HelloWorldScene::create();
+    MainMenuScene *layer = MainMenuScene::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -19,7 +18,7 @@ Scene* HelloWorldScene::scene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorldScene::init()
+bool MainMenuScene::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -39,7 +38,7 @@ bool HelloWorldScene::init()
     MenuItemImage *closeItem = MenuItemImage::create(
                                         "CloseNormal.png",
                                         "CloseSelected.png",
-                                        CC_CALLBACK_1(HelloWorldScene::menuCloseCallback, this));
+                                        CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this));
     
 	closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2));
@@ -77,7 +76,7 @@ bool HelloWorldScene::init()
 }
 
 
-void HelloWorldScene::menuCloseCallback(Object* pSender)
+void MainMenuScene::menuCloseCallback(Object* pSender)
 {
     //Director::getInstance()->end();
 
@@ -87,3 +86,4 @@ void HelloWorldScene::menuCloseCallback(Object* pSender)
     exit(0);
 #endif
 }
+
