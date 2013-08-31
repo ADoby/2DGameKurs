@@ -1,12 +1,12 @@
 #ifndef __GAME_SCENE_H__
 #define __GAME_SCENE_H__
 
+#include "ParallaxLayer.h"
 #include "cocos2d.h"
 
 class GameScene : public cocos2d::Layer {
 private:
-	cocos2d::Layer* paralax1;
-	cocos2d::Layer* paralax2;
+	ParallaxLayer* parallaxLayer;
 
 	cocos2d::Layer* level;
 
@@ -30,7 +30,7 @@ public:
 	void update(float dt);
 };
 
-const float speed = 100.0f;
+const float speed = 300.0f;
 
 #endif
 

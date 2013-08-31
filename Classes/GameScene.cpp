@@ -37,72 +37,33 @@ bool GameScene::init()
 
 	//Para Layer 2 (Ganz Hinten)
 
-	paralax2 = new Layer();
-	tmpSprite = Sprite::create("Game/PARA11.PNG");
-	tmpSprite->setPosition(Point(visibleSize.width/2,visibleSize.height/2));
-	paralax2->addChild(tmpSprite);
 
-	tmpSprite = Sprite::create("Game/PARA12.PNG");
-	tmpSprite->setPosition(Point(visibleSize.width/2 + tmpSprite->getContentSize().width,visibleSize.height/2));
-	paralax2->addChild(tmpSprite);
+	Sprite* sprite = Sprite::create("Level/Jungle/Himmel.PNG");
 
-	this->addChild(paralax2, 0);
+    // position the sprite on the center of the screen
+    sprite->setPosition(Point(sprite->getContentSize().width/2, sprite->getContentSize().height/2));
 
-	//Para Layer 1 (Vor dem layer 2)
+    // add the sprite as a child to this layer
+    this->addChild(sprite, 0);
 
-	paralax1 = new Layer();
-	tmpSprite = Sprite::create("Game/PARA21.PNG");
-	tmpSprite->setPosition(Point(visibleSize.width/2,visibleSize.height/2));
-	paralax1->addChild(tmpSprite);
+	parallaxLayer = ParallaxLayer::create();
 
-	tmpSprite = Sprite::create("Game/PARA22.PNG");
-	tmpSprite->setPosition(Point(visibleSize.width/2 + tmpSprite->getContentSize().width,visibleSize.height/2));
-	paralax1->addChild(tmpSprite);
-
-	this->addChild(paralax1, 0);
-
-	/*
-	paralax1 = new Layer();
-	paralax2 = new Layer();
+	this->addChild(parallaxLayer, 1);
 
 	level = new Layer();
 
-	this->addChild(paralax2, 0);
-	Sprite* tmpS = Sprite::create("Game/PARA11.PNG");
-	tmpS->setPosition(Point(tmpS->getContentSize().width/2,tmpS->getContentSize().height/2));
-	paralax2->addChild(tmpS);
-	tmpS = Sprite::create("Game/PARA12.PNG");
-	tmpS->setPosition(Point(tmpS->getContentSize().width/2+tmpS->getContentSize().width,tmpS->getContentSize().height/2));
-	paralax2->addChild(tmpS);
+	blocks = new Sprite*[200];
 
-	this->addChild(paralax1, 1);
-	tmpS = Sprite::create("Game/PARA21.PNG");
-	tmpS->setPosition(Point(tmpS->getContentSize().width/2,tmpS->getContentSize().height/2));
-	paralax1->addChild(tmpS);
-	tmpS = Sprite::create("Game/PARA22.PNG");
-	tmpS->setPosition(Point(tmpS->getContentSize().width/2+tmpS->getContentSize().width,tmpS->getContentSize().height/2));
-	paralax1->addChild(tmpS);
-
-	this->addChild(level, 2);
-
-	player = Sprite::create("Mario/Standing.PNG");
-	player->setPosition(Point(player->getContentSize().width/2,64+player->getContentSize().height/2));
-	this->addChild(player, 1);
-
-	blocks = new Sprite*[10];
-
-	Sprite* obj;
-
-	for(int i=0; i<10;i++){
+	for(int i=0; i< 200;i++){
 		blocks[i] = Sprite::create("Game/Dirt.PNG");
 
-		blocks[i]->setPosition(Point(blocks[i]->getContentSize().width/2 + i*blocks[i]->getContentSize().width,
+		blocks[i]->setPosition(Point(blocks[i]->getContentSize().width/2 + i * blocks[i]->getContentSize().width - 100*blocks[i]->getContentSize().width,
 									 blocks[i]->getContentSize().height/2));
 
-		level->addChild(blocks[i],1);
+		level->addChild(blocks[i]);
 	}
 
-	*/
+	this->addChild(level, 2);
 
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
@@ -122,11 +83,6 @@ bool GameScene::init()
     menu->setPosition(Point::ZERO);
     this->addChild(menu, 1);
 
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
     
     LabelTTF* label = LabelTTF::create("Hello World", "Arial", 24);
     
@@ -148,22 +104,85 @@ bool GameScene::init()
     this->addChild(sprite, 0);
     */
 
-
-
-
-
-	//this->schedule(schedule_selector(GameScene::update), 0.01F);
+	this->schedule(schedule_selector(GameScene::update), 0.005F);
 
     return true;
 }
 
 void GameScene::update(float dt){
 	if(GetAsyncKeyState(VK_RIGHT)){
-		paralax1->setPositionX(paralax1->getPositionX()-dt*2.0F*speed);
-		paralax2->setPositionX(paralax2->getPositionX()-dt*speed);
-
-		level->setPositionX(level->getPositionX()-dt*3.0*speed);
+		parallaxLayer->move(dt, -1);
+		level->setPositionX(level->getPositionX()-dt*speed);
+	}else if(GetAsyncKeyState(VK_LEFT)){
+		parallaxLayer->move(dt, 1);
+		level->setPositionX(level->getPositionX()+dt*speed);
 	}
+
+	/*
+	if(GetAsyncKeyState(VK_RIGHT)){
+		paralax1->setPositionX(paralax1->getPositionX()-dt*0.75F*speed);
+		paralax2->setPositionX(paralax2->getPositionX()-dt*0.5F*speed);
+
+		level->setPositionX(level->getPositionX()-dt*speed);
+
+
+		//Wir suchen die Position des ersten ParalaxSprites in Relation zum Ursprung (Unten Links vom Screen)
+		//Deshalb MÜSSEN wir "convertToWorldSpace" verwenden, da das Bild nicht direkt in der Scene (dem MainLayer) liegt
+		//sondern in einem extra Paralax-Layer
+		if(paralax2->convertToWorldSpace(paralax21->getPosition()).x + paralax21->getContentSize().width/2 <= 0){
+			//paralax21 Links außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax21 Sprite rechts hinter das paralax22
+			paralax21->setPositionX(paralax22->getPositionX() + paralax21->getContentSize().width);
+		}
+		if(paralax2->convertToWorldSpace(paralax22->getPosition()).x + paralax22->getContentSize().width/2 <= 0){
+			//paralax22 Links außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax22 Sprite rechts hinter das paralax21
+			paralax22->setPositionX(paralax21->getPositionX() + paralax22->getContentSize().width);
+		}
+
+		if(paralax1->convertToWorldSpace(paralax11->getPosition()).x + paralax11->getContentSize().width/2 <= 0){
+			//paralax11 rechts außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax11 Sprite rechts hinter das paralax12
+			paralax11->setPositionX(paralax12->getPositionX() + paralax11->getContentSize().width);
+		}
+		if(paralax1->convertToWorldSpace(paralax12->getPosition()).x + paralax12->getContentSize().width/2 <= 0){
+			//paralax12 rechts außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax12 Sprite rechts hinter das paralax11
+			paralax12->setPositionX(paralax11->getPositionX() + paralax12->getContentSize().width);
+		}
+	}else if(GetAsyncKeyState(VK_LEFT)){
+		paralax1->setPositionX(paralax1->getPositionX()+dt*0.75F*speed);
+		paralax2->setPositionX(paralax2->getPositionX()+dt*0.5F*speed);
+
+		level->setPositionX(level->getPositionX()+dt*speed);
+
+		//Wir suchen die Position des ersten ParalaxSprites in Relation zum Ursprung (Unten Links vom Screen)
+		//Deshalb MÜSSEN wir "convertToWorldSpace" verwenden, da das Bild nicht direkt in der Scene (dem MainLayer) liegt
+		//sondern in einem extra Paralax-Layer
+		if(paralax2->convertToWorldSpace(paralax21->getPosition()).x - paralax21->getContentSize().width/2 >= Director::getInstance()->getVisibleSize().width){
+			//paralax21 rinks außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax21 Sprite links vor das paralax22
+			paralax21->setPositionX(paralax22->getPositionX() - paralax21->getContentSize().width);
+		}
+		if(paralax2->convertToWorldSpace(paralax22->getPosition()).x - paralax22->getContentSize().width/2 >= Director::getInstance()->getVisibleSize().width){
+			//paralax22 rechts außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax22 Sprite links vor das paralax21
+			paralax22->setPositionX(paralax21->getPositionX() - paralax22->getContentSize().width);
+		}
+
+
+		if(paralax1->convertToWorldSpace(paralax11->getPosition()).x - paralax11->getContentSize().width/2 >= Director::getInstance()->getVisibleSize().width){
+			//paralax11 rinks außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax11 Sprite links vor das paralax12
+			paralax11->setPositionX(paralax12->getPositionX() - paralax11->getContentSize().width);
+		}
+		if(paralax1->convertToWorldSpace(paralax12->getPosition()).x - paralax12->getContentSize().width/2 >= Director::getInstance()->getVisibleSize().width){
+			//paralax12 rechts außerhalb vom sichtbaren Bereich
+			//Verschiebe paralax12 Sprite links vor das paralax11
+			paralax12->setPositionX(paralax11->getPositionX() - paralax12->getContentSize().width);
+		}
+	}
+	*/
 }
 
 void GameScene::menuCloseCallback(Object* pSender)
