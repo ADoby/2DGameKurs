@@ -30,6 +30,7 @@ bool ParallaxLayer::init(){
 
 	//Wenn wir die Sprite Sheets fertig haben ändern wir die Layer zu BatchNodes, 
 	//was das Rendering unheimlich schneller machen sollte
+
 	//Add SpriteSheet with every Background here and add plist to cache
 	/*backgroundLayer = CCSpriteBatchNode::create("Asteroids.png");
 	CCSpriteFrameCache* cache = CCSpriteFrameCache::sharedSpriteFrameCache();
@@ -41,6 +42,10 @@ bool ParallaxLayer::init(){
 	backgroundLayer = Layer::create();
 	InitSprites(backgroundLayer, backgroundSprites, backgroundcount, BackGroundSprites, VisibleBackgroundSprites, backgroundSequence);
 	this->addChild(backgroundLayer, 0);
+
+	midground1Layer = Layer::create();
+	InitSprites(midground1Layer, midground1Sprites, midground1count, MidGround1Sprites, VisibleMidground1Sprites, midground1Sequence);
+	this->addChild(midground1Layer, 1);
 }
 
 

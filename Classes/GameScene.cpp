@@ -41,7 +41,7 @@ bool GameScene::init()
 	Sprite* sprite = Sprite::create("Level/Jungle/Himmel.PNG");
 
     // position the sprite on the center of the screen
-    sprite->setPosition(Point(sprite->getContentSize().width/2, sprite->getContentSize().height/2));
+    sprite->setPosition(Point(sprite->getContentSize().width/2*0.5f, sprite->getContentSize().height/2*0.5f));
 
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
